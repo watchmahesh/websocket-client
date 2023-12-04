@@ -8,6 +8,7 @@ export class BalanceService {
   private socket;
 
   constructor() {
+    console.log(process.env.SERVER_URL)
     this.socket = io.connect(process.env.SERVER_URL);
 
     // Handle 'balance' events

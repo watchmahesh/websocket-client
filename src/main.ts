@@ -5,8 +5,9 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 import * as dotenv from 'dotenv';
 
 async function bootstrap() {
+  dotenv.config();
   const app = await NestFactory.create(AppModule);
-  dotenv.config(); // Load environment variables from .env
+  // Load environment variables from .env
   app.useWebSocketAdapter(new IoAdapter(app));
   await app.listen(3002);
 }
