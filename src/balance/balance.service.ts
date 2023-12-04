@@ -1,13 +1,13 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import * as io from 'socket.io-client';
-import { RedisService } from 'src/redis.service';
+// import { RedisService } from 'src/redis.service';
 
 @Injectable()
 export class BalanceService {
   private socket;
 
-  constructor(private readonly redisService: RedisService) {
+  constructor() {
     this.socket = io.connect(process.env.SERVER_URL);
 
     // Handle 'balance' events
