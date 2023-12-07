@@ -11,7 +11,6 @@ export class BalanceController {
     async getBalance(@Query() dto: any, @Res() res: Response): Promise<any> {
         const { userId } = dto;
        const balance = await this.balanceService.requestUserBalance(userId);
-       console.log(`User balance: ${balance}`);
        res.json({ balance });
     }
 }

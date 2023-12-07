@@ -1,24 +1,26 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import * as io from 'socket.io-client';
-// import { RedisService } from 'src/redis.service';
 
 @Injectable()
 export class BalanceService {
   private socket;
 
   constructor() {
-    console.log(process.env.SERVER_URL)
-    this.socket = io.connect(process.env.SERVER_URL);
-
+    const userId = '2';
+    this.socket = io.connect(process.env.SERVER_URL, {
+      query: { userId },
+    });
     // Handle 'balance' events
-    this.socket.on('getBalance', ({ balance }) => {
-      console.log(`Received balance from server: ${balance}`);
+    this.socket.on('getBalance', (data) => {
+      console.log(data)
+      console.log(`User ${data.userid} balance is: ${JSON.parse(JSON.stringify(data.balance))}`);
     });
 
     this.socket.on('connect', () => {
       console.log('Connected to the server');
     });
+
 
   }
 
@@ -26,32 +28,23 @@ export class BalanceService {
 
   async requestUserBalance(userId: string): Promise<number> {
     try {
-      return new Promise<number>((resolve, reject) => {
+      return await new Promise<number>((resolve) => {
         // Listen for the 'getBalance' response
-        const onBalanceReceived = ({ balance }) => {
+        const onBalanceReceived = ({ balance }: { balance: number }) => {
+          console.log(balance);
           resolve(balance);
 
           // Remove the listener to avoid memory leaks
           this.socket.off('getBalance', onBalanceReceived);
         };
 
-        // Listen for 'balanceError' in case of errors
-        const onBalanceError = ({ error }) => {
-          reject(new Error(error));
-
-          // Remove the listener to avoid memory leaks
-          this.socket.off('balanceError', onBalanceError);
-        };
-
         // Attach listeners
-        this.socket.once('getBalance', onBalanceReceived);
-        this.socket.once('balanceError', onBalanceError);
+        this.socket.on('getBalance', onBalanceReceived);
 
         // Emit 'getBalance' event to the server
         this.socket.emit('getBalance', { userId });
       });
     } catch (error) {
-      // Handle any synchronous errors
       throw error;
     }
   }
