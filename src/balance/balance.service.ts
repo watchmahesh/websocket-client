@@ -45,6 +45,7 @@ export class BalanceService {
         this.socket.emit('getBalance', { userId });
       });
     } catch (error) {
+      console.log(error)
       throw error;
     }
   }
