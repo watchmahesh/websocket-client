@@ -7,9 +7,11 @@ export class BalanceService {
   private socket;
 
   constructor() {
-    const userId = '2';
+    const userId = process.env.USERID;
     this.socket = io.connect(process.env.SERVER_URL, {
       query: { userId },
+      transports: ['websocket'], // Ensure WebSocket transport is used
+      withCredentials: true,
     });
     // Handle 'balance' events
     this.socket.on('getBalance', (data) => {
@@ -19,6 +21,10 @@ export class BalanceService {
 
     this.socket.on('connect', () => {
       console.log('Connected to the server');
+    });
+
+    this.socket.on('disconnect', () => {
+      console.log('Disconnected from the server');
     });
 
 
