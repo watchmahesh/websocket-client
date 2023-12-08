@@ -9,6 +9,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // Load environment variables from .env
   app.useWebSocketAdapter(new IoAdapter(app));
-  await app.listen(3002);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
