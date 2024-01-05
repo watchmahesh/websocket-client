@@ -16,7 +16,7 @@ export class BalanceService {
     // Handle 'balance' events
     this.socket.on('getBalance', (data) => {
       console.log(data)
-      console.log(`User ${data.userid} balance is: ${JSON.parse(JSON.stringify(data.balance))}`);
+      // console.log(`User ${data.userid} balance is: ${JSON.parse(JSON.stringify(data.balance))}`);
     });
 
     this.socket.on('connect', () => {
